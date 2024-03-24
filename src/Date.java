@@ -1,3 +1,9 @@
+/******
+ Name: Bryce Dunlap
+ Assignment: Lab 4
+ Date: 3/14/2024
+ ******/
+
 public class Date {
     private int day;
     private int month;
@@ -82,6 +88,14 @@ public class Date {
         else {
             throw new IllegalArgumentException("The years you entered do not make sense. bound is 2024 - 2200");
         }
+    }
+
+
+    //new
+    public int increaseYear()
+    {
+        setYear(this.year + 5);
+        return year;
     }
 
 

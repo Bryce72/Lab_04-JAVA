@@ -1,3 +1,11 @@
+/******
+ Name: Bryce Dunlap
+ Assignment: Lab 4
+ Date: 3/14/2024
+ ******/
+
+
+import java.util.function.Function;
 public class LinkedList {
     private int size;
     private Node head;
@@ -23,6 +31,8 @@ public class LinkedList {
      * Find last node
      * Print all the nodes, aka lists
      * get the size, aka how many nodes in list
+     * get how many tasks are completed
+     * print nodes based on priority
      */
 
     //adding node to the back
@@ -139,10 +149,11 @@ public class LinkedList {
         this.size--;
 
     }
-    private void removeNodeAnywhereRecursively(Node prev, Node current, int position, int currentIndex){
+
+    private void removeNodeAnywhereRecursively(Node prev, Node current, int position, int currentIndex) {
         // this if condition is for when we successfully traverse to the node we want to remove
-        if(currentIndex == position){
-            if(prev != null){
+        if (currentIndex == position) {
+            if (prev != null) {
                 prev.next = current.next;
             }
             return; // another c thing
@@ -152,64 +163,95 @@ public class LinkedList {
 
 
     // Now this function will figure out if a specific task is found in the list
-    public void findTask(Task todoData){
-        boolean found = findTaskRecursively(this.head, todoData, 0);
-        if(!found){
-            throw new IllegalArgumentException("Did not find the data within the node");
+    public int findTask(Task todoData) {
+        int position = findTaskRecursively(this.head, todoData, 1);
+        if (position == -1) {
+            throw new IllegalArgumentException("this isnt a negative list");
         }
+        return position;
     }
+
     //helper function for above
-    private boolean findTaskRecursively(Node node, Task todoData, int index){
-        if(node == null){
+    private int findTaskRecursively(Node node, Task todoData, int index) {
+        if (node == null) {
             // if this if condition goes through then the task was not found
-            return false;
+            return -1;
         }
-        if(node.todoData.equals(todoData)){
+        if (node.todoData.equals(todoData)) {
             // this means the task was found
-            return true;
+            return index;
         }
         //traversal
         return findTaskRecursively(node.next, todoData, index + 1);
     }
 
     //finding what the last node is
-    public void getLastNode(){
-        if(head != null){
+    public void getLastNode() {
+        if (head != null) {
             Node lastNode = findLastNodeRecursively(this.head);
         }
     }
+
     //helper for above
-    private Node findLastNodeRecursively(Node node){
-        if(node.next == null){
+    private Node findLastNodeRecursively(Node node) {
+        if (node.next == null) {
             // returns found node at last position... since the last node points to null
             return node;
-        }else{
+        } else {
             return findLastNodeRecursively(node.next);
         }
     }
 
     // prints the nodes
-    public void printNodes(){
-        if(this.head == null){
+    public void printNodes() {
+        if (this.head == null) {
             throw new IllegalArgumentException("List is empty");
-        }else{
+        } else {
             printNodesRecursively(this.head, 0);
         }
     }
+
     //helper function
-    private void printNodesRecursively(Node node, int index){
-        if(node == null) { // basee case
+    private void printNodesRecursively(Node node, int index) {
+        if (node == null) { // basee case
             return;
         }
-        System.out.println("Testing print descriptions: " + node.todoData.getDescription() + "----The size of your todo list is: " + size + "The date to do this is: " + node.todoData.getDate()) +"The priority is: " + node.todoData.getPriority();
+        System.out.println("Description: " + node.todoData.getDescription() + "----The size of your todo list is: " + size + " The date to do this is: " + node.todoData.getDate().getMonth() + "/" + node.todoData.getDate().getDay() + "/" + node.todoData.getDate().getYear() + " The priority is: " + node.todoData.getPriority());
         printNodesRecursively(node.next, index + 1);
     }
 
-    public int getListSize(){
+    public int getListSize() {
         return size;
     }
 
+    public Node getHead() {
+        return this.head;
+    }
 
+    // I knoowww this doesnt use recursion. I believe I demonstrated how to do so. I popped this function in real quick to satisfy what was on the list of todos in the google doc.
+    public int countCompletedTasks() {
+        int count = 0;
+        Node current = this.head;
+        while (current != null) {
+            if (current.todoData.getCompleted()) {
+                count++;
+            }
+            current = current.next;
+        }
+        return count;
+    }
+
+
+    public void printNodeSpecificPriority(Priority priority) {
+        Node current = this.head;
+        while (current != null) {
+            if (current.todoData.getPriority() == priority) {
+                System.out.println("These are the descriptions of tasks with the specific priority you chose: " + current.todoData.getDescription()); // for simplicity sake just printing the description
+            }
+            current = current.next;
+        }
+
+    }
 
 
 
